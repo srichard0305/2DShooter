@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -23,16 +24,21 @@ public class Ship {
 
     Array<Bullet> lasers;
 
+    Rectangle boundingRec;
+
+
     public Ship(float shipX, float shipY, Texture spaceShipTexture) {
         this.shipX = shipX;
         this.shipY = shipY;
         this.spaceShipTexture = spaceShipTexture;
         spaceShip = new Sprite(spaceShipTexture);
         lasers = new Array<>();
+        boundingRec = new Rectangle(shipX, shipY, spaceShip.getWidth(), spaceShip.getHeight());
     }
 
     public void draw(Batch batch){
         spaceShip.setPosition(shipX, shipY);
+        boundingRec.setPosition(shipX, shipY);
         spaceShip.draw(batch);
     }
 
@@ -68,11 +74,18 @@ public class Ship {
 
     public void shootLaser(){
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            lasers.add(new Bullet(this.getCenterPosition(), new Vector2(1.0f, 0.0f).rotateDeg(this.getRotationOfShip() + 90)));
+            lasers.add(new Bullet(this.getCenterPosition(),
+                new Vector2(1.0f, 0.0f).rotateDeg(this.getRotationOfShip() + 90),
+                    Gdx.graphics.getDeltaTime()));
         }
 
-        for(Bullet bullet : lasers)
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        for(Bullet bullet : lasers) {
             bullet.updateBullet(Gdx.graphics.getDeltaTime());
+            if((bullet.deltaTime - deltaTime) > 5){
+                lasers.removeIndex(0);
+            }
+        }
     }
 
 

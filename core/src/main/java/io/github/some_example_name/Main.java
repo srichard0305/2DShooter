@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
 
@@ -20,6 +23,10 @@ public class Main extends ApplicationAdapter {
     Ship playerShip;
 
     ShapeRenderer shapeRenderer;
+
+    ArrayList<EnemyShip> enemyShips;
+
+    int timer = 0;
 
     @Override
     public void create() {
@@ -37,6 +44,8 @@ public class Main extends ApplicationAdapter {
 
         shapeRenderer = new ShapeRenderer();
 
+        enemyShips = new ArrayList<>();
+
     }
 
     @Override
@@ -45,13 +54,28 @@ public class Main extends ApplicationAdapter {
 
         camera.update();
 
+        if(timer > 300){
+            enemyShips.add(new EnemyShip(0,0, new Texture("enemy.png")));
+            timer = 0;
+        }
+
         batch.begin();
         playerShip.draw(batch);
+        for(int i = 0; i < enemyShips.size(); i++){
+            if(enemyShips.get(i).isDestroyed)
+                continue;
+            enemyShips.get(i).draw(batch, playerShip);
+        }
         batch.end();
 
         playerShip.movePlayer();
         playerShip.rotatePlayer();
         playerShip.shootLaser();
+        for(int i = 0; i < enemyShips.size(); i++){
+            if(enemyShips.get(i).isDestroyed)
+                continue;
+            enemyShips.get(i).moveEnemyShip(playerShip);
+        }
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
@@ -59,8 +83,34 @@ public class Main extends ApplicationAdapter {
             shapeRenderer.circle(bullet.position.x, bullet.position.y, 5f, 32);
         shapeRenderer.end();
 
+        detectCollision();
+
+        timer++;
+
     }
 
+    public void detectCollision(){
+
+        ArrayList<EnemyShip> tempList = new ArrayList<>();
+
+        for(int i = 0; i < enemyShips.size(); i++) {
+            for (Bullet bullet : playerShip.lasers) {
+                if(enemyShips.get(i).boundingRec.overlaps(bullet.boundingRec)){
+                    tempList.add(enemyShips.get(i));
+
+                }
+            }
+        }
+        enemyShips.removeAll(tempList);
+       
+
+        for(EnemyShip enemyShip : enemyShips){
+
+            if(enemyShip.boundingRec.overlaps(playerShip.boundingRec)){
+            }
+        }
+
+    }
 
     @Override
     public void dispose() {
