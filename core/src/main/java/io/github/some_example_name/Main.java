@@ -2,31 +2,24 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
 
-    private int shipX, shipY;
-
-    Vector2 mousePosition;
-
     OrthographicCamera camera;
-    Viewport viewport;
 
     SpriteBatch batch;
-    Sprite spaceShip;
+
+    Ship playerShip;
+
+    ShapeRenderer shapeRenderer;
 
     @Override
     public void create() {
@@ -34,14 +27,15 @@ public class Main extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        camera = new OrthographicCamera(30, 30 * (h / w));
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-        
-        shipX = shipY = 100;
-        spaceShip = new Sprite(new Texture("spaceship-removebg-preview.png"));
+
+        playerShip = new Ship(w/2, h/2, new Texture("spaceship-removebg-preview.png"));
 
         batch = new SpriteBatch();
+
+        shapeRenderer = new ShapeRenderer();
 
     }
 
@@ -51,46 +45,22 @@ public class Main extends ApplicationAdapter {
 
         camera.update();
 
-        movePlayer();
-        rotatePlayer();
-
         batch.begin();
-        spaceShip.setPosition(shipX, shipY);
-        spaceShip.draw(batch);
+        playerShip.draw(batch);
         batch.end();
 
+        playerShip.movePlayer();
+        playerShip.rotatePlayer();
+        playerShip.shootLaser();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        for(Bullet bullet : playerShip.lasers)
+            shapeRenderer.circle(bullet.position.x, bullet.position.y, 5f, 32);
+        shapeRenderer.end();
 
     }
 
-    //moves player around world
-    public void movePlayer() {
-
-        if (Gdx.input.isKeyPressed(Input.Keys.W)){
-            shipY += 8;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)){
-            shipX -= 8;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)){
-            shipY -= 8;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)){
-            shipX += 8;
-        }
-
-    }
-
-    public void rotatePlayer(){
-
-        float xInput = Gdx.input.getX();
-        float yInput = (Gdx.graphics.getHeight() - Gdx.input.getY());
-
-        float angle = (float) Math.atan2(yInput - shipY, xInput - shipX);
-        angle -= Math.PI/2;
-        angle = angle * MathUtils.radDeg;
-
-        spaceShip.setRotation(angle);
-    }
 
     @Override
     public void dispose() {
