@@ -6,17 +6,17 @@ import com.badlogic.gdx.math.Vector2;
 public class Bullet {
 
     final float maxSpeecd = 200f;
-    float deltaTime;
+    int timer;
 
     public Vector2 position;
     public Vector2 direction;
 
     Rectangle boundingRec;
 
-    public Bullet(Vector2 position, Vector2 direction, float deltaTime) {
+    public Bullet(Vector2 position, Vector2 direction, int timer) {
         this.position = position;
         this.direction = direction;
-        this.deltaTime = deltaTime;
+        this.timer = timer;
         boundingRec = new Rectangle(position.x, position.y, 5, 5);
 
     }

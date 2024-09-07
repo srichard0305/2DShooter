@@ -2,15 +2,15 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
+
+
+import java.util.ArrayList;
 
 public class Ship {
 
@@ -18,11 +18,13 @@ public class Ship {
 
     private float shipX, shipY;
 
+    private int timer;
+
     private Texture spaceShipTexture;
 
     private Sprite spaceShip;
 
-    Array<Bullet> lasers;
+    ArrayList<Bullet> lasers;
 
     Rectangle boundingRec;
 
@@ -32,8 +34,9 @@ public class Ship {
         this.shipY = shipY;
         this.spaceShipTexture = spaceShipTexture;
         spaceShip = new Sprite(spaceShipTexture);
-        lasers = new Array<>();
+        lasers = new ArrayList<>();
         boundingRec = new Rectangle(shipX, shipY, spaceShip.getWidth(), spaceShip.getHeight());
+        timer = 0;
     }
 
     public void draw(Batch batch){
@@ -73,19 +76,26 @@ public class Ship {
     }
 
     public void shootLaser(){
+        timer++;
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            lasers.add(new Bullet(this.getCenterPosition(),
-                new Vector2(1.0f, 0.0f).rotateDeg(this.getRotationOfShip() + 90),
-                    Gdx.graphics.getDeltaTime()));
-        }
-
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        for(Bullet bullet : lasers) {
-            bullet.updateBullet(Gdx.graphics.getDeltaTime());
-            if((bullet.deltaTime - deltaTime) > 5){
-                lasers.removeIndex(0);
+            if(timer > 15) {
+                lasers.add(new Bullet(this.getCenterPosition(),
+                    new Vector2(1.0f, 0.0f).rotateDeg(this.getRotationOfShip() + 90),
+                    0));
+                timer = 0;
             }
         }
+
+        ArrayList<Bullet> temp = new ArrayList();
+        for(Bullet bullet : lasers) {
+            bullet.updateBullet(Gdx.graphics.getDeltaTime());
+            bullet.timer++;
+            if(bullet.timer > 300 ){
+                temp.add(bullet);
+            }
+        }
+        lasers.removeAll(temp);
+
     }
 
 
