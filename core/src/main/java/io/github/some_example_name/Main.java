@@ -9,7 +9,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        gameScreen = new GameScreen();
+        gameScreen = new GameScreen(this);
         setScreen(gameScreen);
     }
 

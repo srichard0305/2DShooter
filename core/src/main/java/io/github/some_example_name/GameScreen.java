@@ -1,5 +1,6 @@
 package io.github.some_example_name;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -25,7 +26,14 @@ public class GameScreen implements Screen {
 
     int timer = 0;
 
-    GameScreen(){
+    int enemiesKilled;
+
+    GameOverScreen gameOverScreen;
+
+    Game game;
+
+
+    GameScreen(Game game){
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -41,6 +49,9 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         enemyShips = new ArrayList<>();
+
+        this.game = game;
+
     }
 
     @Override
@@ -106,7 +117,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        shapeRenderer.dispose();
+        gameOverScreen.dispose();
     }
 
     public void detectCollision(){
@@ -127,8 +140,15 @@ public class GameScreen implements Screen {
         for(EnemyShip enemyShip : enemyShips){
 
             if(enemyShip.boundingRec.overlaps(playerShip.boundingRec)){
+                gameOver();
             }
         }
+
+    }
+
+    public void gameOver(){
+        gameOverScreen = new GameOverScreen(game);
+        game.setScreen(gameOverScreen);
 
     }
 }
