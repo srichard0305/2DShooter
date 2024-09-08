@@ -5,12 +5,12 @@ import com.badlogic.gdx.Game;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
 
-    GameScreen gameScreen;
+    StartScreen startScreen;
 
     @Override
     public void create() {
-        gameScreen = new GameScreen(this);
-        setScreen(gameScreen);
+        startScreen = new StartScreen(this);
+        setScreen(startScreen);
     }
 
     @Override
@@ -21,11 +21,11 @@ public class Main extends Game {
 
     @Override
     public void resize(int width, int height){
-        gameScreen.resize(width, height);
+        startScreen.resize(width, height);
     }
 
     @Override
     public void dispose() {
-        gameScreen.dispose();
+        startScreen.dispose();
     }
 }

@@ -13,32 +13,37 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameOverScreen implements Screen {
+public class StartScreen implements Screen {
 
     Game game;
+    GameScreen gameScreen;
     Viewport viewport;
     Stage stage;
 
+    StartScreen(Game game){
 
-    GameOverScreen(Game game){
         this.game = game;
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
-        Table gameOverTable = new Table();
-        gameOverTable.center();
-        gameOverTable.setFillParent(true);
+        Table startScreenTable = new Table();
+        startScreenTable.center();
+        startScreenTable.setFillParent(true);
 
-        Label gameOverLabel = new Label("GAME OVER", font);
-        Label playAgainLabel = new Label("CLICK ANYWHERE TO PLAY AGAIN", font);
+        Label welcomeLabel = new Label("Welcome to 2D Top Down Shooter", font);
+        Label howToPlayLabel = new Label("Use WASD to move ship, Fire with Left mouse button, and aim with mouse", font);
+        Label clickToPlayLabel = new Label("CLICK ANYWHERE TO PLAY", font);
 
-        gameOverTable.add(gameOverLabel).expandX();
-        gameOverTable.row();
-        gameOverTable.add(playAgainLabel).expandX().padTop(10f);
+        startScreenTable.add(welcomeLabel).expandX();
+        startScreenTable.row();
+        startScreenTable.add(howToPlayLabel).expandX().padTop(10f);
+        startScreenTable.row();
+        startScreenTable.add(clickToPlayLabel).expandX().padTop(10f);
 
-        stage.addActor(gameOverTable);
+        stage.addActor(startScreenTable);
+
     }
 
     @Override
