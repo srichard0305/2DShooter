@@ -35,5 +35,5 @@ For example, `core:clean` removes `build` folder only from the `core` project.
 A top down 2D shooter similar to the old school Asteroids game. The player controls the ship using the WASD keys, aims with the mouse, and fires using the left mouse click. 
 
 # Installation 
-Download the .jar file found in lwjgl3/build/lib run by doulbe clicking or in cmd java -jar -jar-file-name.jar.
-Needs an JRE to run. 
+Download the .jar file found in lib run by doulbe clicking or in cmd java -jar -jar-file-name.jar.
+Needs an JRE to run.
