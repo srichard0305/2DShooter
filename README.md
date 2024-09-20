@@ -36,6 +36,8 @@ A top down 2D shooter similar to the old school Asteroids game. The player contr
 
 [![screenshot](https://github.com/srichard0305/2DShooter/blob/main/screenshot.PNG)](#screenshot)
 
+This game was made to showcase typical steering behaviours found in video game AI. Including seek, align, separate, and flocking. 
+
 # Installation 
 Download the .jar file found in lib run by doulbe clicking or in cmd java -jar -jar-file-name.jar.
 Needs an JRE to run.
